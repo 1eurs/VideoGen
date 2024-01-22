@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate TikTok</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Grape+Nuts&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212; /* Dark background color */
+            color: #ffffff; /* Light text color */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #container {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #1e1e1e; /* Dark container background color */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Light box shadow */
+        }
+        h1 {
+            font-family: 'Grape Nuts', cursive;
+            font-size: 36px; /* Adjust the font size as needed */
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #444; /* Darker border color */
+            border-radius: 5px;
+            width: 80%;
+            background-color: #333; /* Darker input background color */
+            color: #ffffff; /* Light text color */
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        button {
+            flex: 1;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        #loading-container {
+            display: none;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+        #loading-spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #007bff;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Generate a TikTok</h1>
+        <input type="text" id="textInput" placeholder="Enter text">
+        <div class="button-container">
+            <button id="generateButton">Generate</button>
+            <button id="generateTikToksButton">TikToks</button>
+        </div>
+        <div id="loading-container">
+            <div id="loading-spinner-container">
+                <div id="loading-spinner"></div>
+            </div>
+        </div>
+        <div id="result"></div>
+    </div>
+    <script>
+        function showLoading() {
+            document.getElementById("loading-container").style.display = "block";
+        }
+
+        function hideLoading() {
+            document.getElementById("loading-container").style.display = "none";
+        }
+
+        function redirectToGallery() {
+            window.location.href = "/gallery";
+        }
+
+        document.getElementById("generateButton").addEventListener("click", function() {
+            showLoading();
+            var textInput = document.getElementById("textInput").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/run_full_process", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    hideLoading();
+                    document.getElementById("result").innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send("input_text=" + textInput);
+        });
+
+        document.getElementById("generateTikToksButton").addEventListener("click", function() {
+            redirectToGallery();
+        });
+    </script>
+</body>
+</html>

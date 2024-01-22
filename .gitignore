@@ -1,0 +1,11 @@
+.git/
+.venv/
+__pycache__/
+assets/
+audio_files/
+dataset/
+Retrieval-based-Voice-Conversion-WebUI/
+StyleTTS2/
+video_files/
+assets/
+.gitmodules

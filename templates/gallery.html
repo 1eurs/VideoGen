@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Gallery</title>
+    <style>
+        /* General styles */
+        body {
+            background-color: #121212; /* Dark background color */
+            color: #ffffff; /* Light text color */
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        /* Gallery styles */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            justify-items: center;
+        }
+        .video {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Light box shadow */
+        }
+        video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Dark mode styles */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212; /* Dark background color */
+                color: #ffffff; /* Light text color */
+            }
+            .gallery {
+                background-color: #1e1e1e; /* Darker container background color */
+            }
+            .video {
+                background-color: #333; /* Darker video background color */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Gallery</h1>
+    <div class="gallery">
+        {% for video in videos %}
+            <div class="video">
+                <video controls>
+                    <source src="{{ video }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
