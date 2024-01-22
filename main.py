@@ -1,16 +1,16 @@
 import os
 import subprocess
 import time
-from generatetext import generate_response
-from texttospeech import generate_audio
-from rvc import process_audio
-from alignemusicwithspeech import output_audio
-from texttoimages import generate_video
+from scripts.generate_text import generate_response
+from scripts.text_to_speech import generate_audio
+from utils.rvc import process_audio
+from scripts.align_music_with_speech import output_audio
+from scripts.text_to_images import generate_video
 
 MODEL = 'llama2'
 timestamp = time.strftime("%Y%m%d-%H%M%S")
-audio_folder = "audio_files"
-video_folder = "video_files"
+audio_folder = "output_audios"
+video_folder = "output_videos"
 assets_folder = "assets"
 
 os.makedirs(audio_folder, exist_ok=True)
@@ -26,7 +26,8 @@ FINAL_VIDEO_NAME = os.path.join(video_folder, f"output_{timestamp}.mp4")
 
 command = ["auto_subtitle", FINAL_VIDEO_NAME, "-o", os.path.join(video_folder, "done")]
 
-def main(TOPIC = "garan and lux"):
+def main(TOPIC = "tiger and deer"):
+    
     response_text = generate_response(TOPIC, MODEL)
     generate_audio(StyleTTS_OUTPUT_PATH, response_text)
     process_audio(
@@ -44,7 +45,6 @@ def main(TOPIC = "garan and lux"):
         protect_consonants=0,
         name=RVC_OUTPUT
     )
-
 
     output_audio(audio=RVC_OUTPUT, music=MUSIC_PATH, name=FINAL_AUDIO_NAME)
 
