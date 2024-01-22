@@ -1,5 +1,3 @@
-import requests
-import random
 def create_story_prompt(topic):
     return f"""Imagine a scenario in the world of {topic}. The main character, deeply involved in their respective field, faces a critical moment or dilemma. They pose a thought-provoking, rhetorical question that reflects their challenge or situation.
 
@@ -36,8 +34,6 @@ def create_story_prompt2(topic):
     The scenario should be around 100 sentence long.
     The output should be only the story.
     """
-
-
 
 
 def create_story_prompt3(topic):
@@ -86,24 +82,5 @@ Imagine a scenario where {topic} is the focal point. In a moment of curiosity, s
 
 make same style story telling but about {topic}. No matter what is the topic ouput same style story and reserche the topic to make ur own story but same style .. make it around 100 words and only output the story '''
 
-
-
 def create_story_prompt5(topic):
     return f'''"Generate a whimsical and humorous narrative centered around the theme of {topic}, with characters confidently using phrases like 'Nah, I'd [action]' or posing questions in the format of 'Are you [condition] because, or [condition] because you're [condition]?' Encourage the use of character responses in the style of '[Character] then replied [assertion],' and incorporate moments where characters are unaware of crucial information, leading to unexpected outcomes within the realm of {topic}. Explore the application of principles or advice, stating 'The first is [advice or principle], and the second is [another advice or principle],' specifically related to the challenges and quirks of {topic}, to add a layer of humor and perspective. Additionally, introduce critical moments where characters could have taken specific actions related to {topic}, but for a given reason, they didn't. Include sequences where characters employ certain techniques or concepts within the context of {topic}, resulting in surprising or unexpected outcomes. Story length around 100 words. Output should be only the story and nothing else."'''
-
-
-def generate_response(topic, model="falcon", url='http://localhost:11434/api/generate', stream=False):
-    prompt = create_story_prompt4(topic)
-    data = {
-        "model": model,
-        "prompt": prompt,
-        "stream": stream
-    }
-
-    response = requests.post(url, json=data)
-
-    if response.status_code == 200:
-        return response.json().get('response')
-    else:
-        return f"Error: Unable to generate a response. Status code: {response.status_code}"
-

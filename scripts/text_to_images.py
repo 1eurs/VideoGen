@@ -1,5 +1,5 @@
 import requests
-from moviepy.editor import ImageClip, concatenate_videoclips, TextClip, CompositeVideoClip, AudioFileClip
+from moviepy.editor import ImageClip, concatenate_videoclips, TextClip, AudioFileClip
 from pydub import AudioSegment
 import nltk
 from nltk.tokenize import sent_tokenize
@@ -16,14 +16,11 @@ def resize_image(image_path, target_height=1920, target_width=1080):
         if img.mode != 'RGB':
             img = img.convert('RGB')
 
-        # Resize image based on the target height while maintaining aspect ratio
         aspect_ratio = img.width / img.height
         new_width = int(target_height * aspect_ratio)
 
-        # Resize the image
         resized_img = img.resize((new_width, target_height), Image.Resampling.LANCZOS)
 
-        # If the width is greater than the target width, crop the image
         if new_width > target_width:
             left = (new_width - target_width) / 2
             top = 0
@@ -39,7 +36,7 @@ def get_audio_length(file_path):
     return len(audio) / 1000.0 
 
 def download_image(query):
-    path = downloader.download(query, limit=1, output_dir='dataset', adult_filter_off=True, force_replace=False, timeout=60, verbose=True)
+    path = downloader.download(query, limit=1, output_dir='assets/images', adult_filter_off=True, force_replace=False, timeout=60, verbose=True)
     if path: 
         np_image = resize_image(path)
         return np_image

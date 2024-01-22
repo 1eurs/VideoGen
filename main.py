@@ -1,35 +1,42 @@
 import os
 import subprocess
 import time
-from scripts.generate_text import generate_response
-from scripts.text_to_speech import generate_audio
-from utils.rvc import process_audio
+from ml_models.llm import generate_response
+from ml_models.StyleTTS2 import generate_audio
+from ml_models.rvc import process_audio
 from scripts.align_music_with_speech import output_audio
 from scripts.text_to_images import generate_video
 
+
 MODEL = 'llama2'
-timestamp = time.strftime("%Y%m%d-%H%M%S")
-audio_folder = "output_audios"
-video_folder = "output_videos"
-assets_folder = "assets"
+TOPIC = "tiger and deer"
+TIMESTAMP = time.strftime("%Y%m%d-%H%M%S")
 
-os.makedirs(audio_folder, exist_ok=True)
-os.makedirs(video_folder, exist_ok=True)
-os.makedirs(assets_folder, exist_ok=True)
+AUDIO_FOLDER = "output_audios"
+VIDEO_FOLDER = "output_videos"
+ASSETS_FOLDER = "assets"
 
-StyleTTS_OUTPUT_PATH = os.path.abspath(os.path.join(audio_folder, f"styletts_output_{timestamp}.wav"))
+os.makedirs(AUDIO_FOLDER, exist_ok=True)
+os.makedirs(VIDEO_FOLDER, exist_ok=True)
+os.makedirs(ASSETS_FOLDER, exist_ok=True)
+
+StyleTTS_OUTPUT_PATH = os.path.abspath(os.path.join(AUDIO_FOLDER, f"styletts_output_{TIMESTAMP}.wav"))
 SPEAKER_ID = 0
-RVC_OUTPUT = os.path.join(audio_folder, f"rvc_output_{timestamp}.wav")
-MUSIC_PATH = os.path.join(assets_folder, "music/m1.wav")
-FINAL_AUDIO_NAME = os.path.join(audio_folder, f"final_audio_{timestamp}.wav")
-FINAL_VIDEO_NAME = os.path.join(video_folder, f"output_{timestamp}.mp4")
+RVC_OUTPUT = os.path.join(AUDIO_FOLDER, f"rvc_output_{TIMESTAMP}.wav")
+MUSIC_PATH = os.path.join(ASSETS_FOLDER, "music/m1.wav")
+FINAL_AUDIO_NAME = os.path.join(AUDIO_FOLDER, f"final_audio_{TIMESTAMP}.wav")
+FINAL_VIDEO_NAME = os.path.join(VIDEO_FOLDER, f"output_{TIMESTAMP}.mp4")
 
-command = ["auto_subtitle", FINAL_VIDEO_NAME, "-o", os.path.join(video_folder, "done")]
+COMMAND = ["auto_subtitle", FINAL_VIDEO_NAME, "-o", os.path.join(VIDEO_FOLDER, "done")]
 
-def main(TOPIC = "tiger and deer"):
-    
-    response_text = generate_response(TOPIC, MODEL)
-    generate_audio(StyleTTS_OUTPUT_PATH, response_text)
+def generate_LLM_output():
+    script = generate_response(TOPIC, MODEL)
+    return script
+
+def generate_styletts_output(script):
+    generate_audio(StyleTTS_OUTPUT_PATH, script)
+
+def process_rvc_output():
     process_audio(
         speaker_id=SPEAKER_ID,
         audio_path=StyleTTS_OUTPUT_PATH,
@@ -45,11 +52,20 @@ def main(TOPIC = "tiger and deer"):
         protect_consonants=0,
         name=RVC_OUTPUT
     )
-
+def generate_final_audio():
     output_audio(audio=RVC_OUTPUT, music=MUSIC_PATH, name=FINAL_AUDIO_NAME)
 
-    generate_video(response_text, FINAL_AUDIO_NAME, FINAL_VIDEO_NAME)
-    subprocess.run(command)
+def generate_final_video(script):
+    generate_video(script, FINAL_AUDIO_NAME, FINAL_VIDEO_NAME)
+
+def main():
+    script = generate_LLM_output()
+    generate_styletts_output(script)
+    process_rvc_output()
+    generate_final_audio()
+    generate_final_video()
+    #subtitle
+    subprocess.run(COMMAND)
 
 if __name__ == "__main__":
     main()
